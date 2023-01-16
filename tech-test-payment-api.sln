@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tech-test-payment-api", "src\tech-test-payment-api.csproj", "{FCF9914D-9424-4F74-AAB7-ED53D39426E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{627030C4-B727-401A-B8F7-42218AF7B923}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCF9914D-9424-4F74-AAB7-ED53D39426E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF9914D-9424-4F74-AAB7-ED53D39426E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF9914D-9424-4F74-AAB7-ED53D39426E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF9914D-9424-4F74-AAB7-ED53D39426E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{627030C4-B727-401A-B8F7-42218AF7B923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{627030C4-B727-401A-B8F7-42218AF7B923}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{627030C4-B727-401A-B8F7-42218AF7B923}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{627030C4-B727-401A-B8F7-42218AF7B923}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
