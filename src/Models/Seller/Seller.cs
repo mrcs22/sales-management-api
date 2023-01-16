@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace tech_test_payment_api.Models.Seller
+namespace tech_test_payment_api.Models
 {
     public class Seller
     {
