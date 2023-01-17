@@ -8,10 +8,10 @@ services:
     environment:
       - ASPNETCORE_HTTP_PORT=https://+:5001
       - ASPNETCORE_URLS=http://+:5000
-      - ConexaoPadrao=Server=db,1433; Database=tech_test_payment_api_db; User=SA; Password=SenhaSuperSegura@123; TrustServerCertificate=true
+      - DbConnectionString=Server=db,1433; Database=tech_test_payment_api_db; User=SA; Password=SenhaSuperSegura@123; TrustServerCertificate=true
     depends_on:
       - db
-    entrypoint: [ "/bin/sh" , "-c", "dotnet /app/tech-test-payment-api.dll"]
+    entrypoint: [ "/bin/sh" , "-c", "dotnet ef database update --project /source/src/tech-test-payment-api.csproj && dotnet /app/tech-test-payment-api.dll"]
     restart: always
     container_name: webapi
   db:
