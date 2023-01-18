@@ -10,6 +10,7 @@ namespace tech_test_payment_api.Models
         public Seller Seller { get; set; }
         public EnumStatusSale Status {get; set;}
         [Required]
+        [MinLength(1)]
         public List<Product> Products { get; set; }
     }
 }
