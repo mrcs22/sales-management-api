@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using tech_test_payment_api.Data;
 using tech_test_payment_api.Repositories;
 using tech_test_payment_api.Services;
+using tech_test_payment_api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,5 +38,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<SaleServiceExceptionMiddleware>();
 
 app.Run();

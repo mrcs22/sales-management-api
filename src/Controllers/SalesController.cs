@@ -32,51 +32,36 @@ using tech_test_payment_api.Services.Exceptions;
         }
 
         [HttpPost]
-        [Route("/{id}/approve-payment")]
+        [Route("{id}/approve-payment")]
         public IActionResult ApproveSalePayment(int id){
-            try{
-                _saleService.ApproveSalePayment(id);
+            _saleService.ApproveSalePayment(id);
 
-                return Ok();
-            }catch(SaleServiceException exception){
-                return BadRequest(exception.Message);
-            }
+            return Ok();
         }
 
         [HttpPost]
-        [Route("/{id}/cancel")]
+        [Route("{id}/cancel")]
         public IActionResult CancelSale(int id){
-            try{
-                _saleService.CancelSale(id);
+            _saleService.CancelSale(id);
 
-                return Ok();
-            }catch(SaleServiceException exception){
-                return BadRequest(exception.Message);
-            }
+            return Ok();           
         }
 
         [HttpPost]
-        [Route("/{id}/mark-as-sent")]
+        [Route("{id}/mark-as-sent")]
         public IActionResult SendSaleToCarrier(int id){
-            try{
-                _saleService.SendSaleToCarrier(id);
+            _saleService.SendSaleToCarrier(id);
 
-                return Ok();
-            }catch(SaleServiceException exception){
-                return BadRequest(exception.Message);
-            }
+            return Ok();
+           
         }        
 
         [HttpPost]
-        [Route("/{id}/mark-as-delivered")]
+        [Route("{id}/mark-as-delivered")]
         public IActionResult FinishSaleDelivery(int id){
-            try{
-                _saleService.FinishSaleDelivery(id);
+            _saleService.FinishSaleDelivery(id);
 
-                return Ok();
-            }catch(SaleServiceException exception){
-                return BadRequest(exception.Message);
-            }
+            return Ok();
         }  
        
     }
