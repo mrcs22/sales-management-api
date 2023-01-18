@@ -14,9 +14,13 @@ namespace tech_test_payment_api.Services
         }
         public void CreateSale(Sale sale)
         {
-            sale.Date = DateTime.Now;
+            var timestamp = DateTime.Now;
+            
+            sale.Date = timestamp;
             sale.OrderIdentifier = Guid.NewGuid().ToString();
             sale.Status = EnumStatusSale.Waiting_payment;
+
+            sale.Products.ForEach(p => p.CreatedAt = timestamp);
             
             _saleRepository.CreateSale(sale);
         }
