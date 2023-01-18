@@ -11,6 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddTransient<ISaleRepository, SaleRepository>();
 builder.Services.AddTransient<ISaleService, SaleService>();
+builder.Services.AddTransient<ISellerRepository, SellerRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
