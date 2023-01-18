@@ -66,6 +66,18 @@ using tech_test_payment_api.Services.Exceptions;
                 return BadRequest(exception.Message);
             }
         }        
+
+        [HttpPost]
+        [Route("/{id}/mark-as-delivered")]
+        public IActionResult FinishSaleDelivery(int id){
+            try{
+                _saleService.FinishSaleDelivery(id);
+
+                return Ok();
+            }catch(SaleServiceException exception){
+                return BadRequest(exception.Message);
+            }
+        }  
        
     }
 }
