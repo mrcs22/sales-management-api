@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using tech_test_payment_api.Services;
 using tech_test_payment_api.Models;
-using tech_test_payment_api.Services.Exceptions;
  namespace tech_test_payment_api.Controllers
 {
     [ApiController]
@@ -19,6 +18,9 @@ using tech_test_payment_api.Services.Exceptions;
         [Route("{id}")]
         public IActionResult GetSaleById(int id){
            var sale = _saleService.GetSaleById(id);
+
+           if(sale == null)
+            return NotFound();
 
            return Ok(sale);
         }
