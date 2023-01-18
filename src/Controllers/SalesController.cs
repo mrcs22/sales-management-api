@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using tech_test_payment_api.Services;
 using tech_test_payment_api.Models;
-
-namespace tech_test_payment_api.Controllers
+ namespace tech_test_payment_api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -21,6 +20,14 @@ namespace tech_test_payment_api.Controllers
            var sale = _saleService.GetSaleById(id);
 
            return Ok(sale);
+        }
+
+        [HttpPost]
+        [Route("")]
+        public IActionResult CreateSale(Sale sale){
+            _saleService.CreateSale(sale);
+
+            return CreatedAtAction(nameof(GetSaleById), new {id = sale.Id}, sale);
         }
        
     }
