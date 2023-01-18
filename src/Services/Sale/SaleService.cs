@@ -58,7 +58,9 @@ namespace tech_test_payment_api.Services
 
         public Sale GetSaleById(int id)
         {
-            throw new NotImplementedException();
+            var sale = _saleRepository.GetSaleById(id);
+
+            return sale;
         }
 
         public void SendSaleToCarrier(int id)
