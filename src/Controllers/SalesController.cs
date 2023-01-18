@@ -42,6 +42,18 @@ using tech_test_payment_api.Services.Exceptions;
                 return BadRequest(exception.Message);
             }
         }
+
+        [HttpPost]
+        [Route("/{id}/cancel")]
+        public IActionResult CancelSale(int id){
+            try{
+                _saleService.CancelSale(id);
+
+                return Ok();
+            }catch(SaleServiceException exception){
+                return BadRequest(exception.Message);
+            }
+        }
        
     }
 }
