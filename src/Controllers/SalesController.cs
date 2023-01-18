@@ -54,6 +54,18 @@ using tech_test_payment_api.Services.Exceptions;
                 return BadRequest(exception.Message);
             }
         }
+
+        [HttpPost]
+        [Route("/{id}/mark-as-sent")]
+        public IActionResult SendSaleToCarrier(int id){
+            try{
+                _saleService.SendSaleToCarrier(id);
+
+                return Ok();
+            }catch(SaleServiceException exception){
+                return BadRequest(exception.Message);
+            }
+        }        
        
     }
 }
