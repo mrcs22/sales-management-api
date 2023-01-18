@@ -2,6 +2,7 @@ using Moq;
 using tech_test_payment_api.Models;
 using tech_test_payment_api.Repositories;
 using tech_test_payment_api.Services;
+using tech_test_payment_api.Services.Exceptions;
 using tests.Factories;
 
 namespace tests 
@@ -73,7 +74,43 @@ namespace tests
           
 
             Assert.Null(exception);    
-        }        
+        }      
+
+        [Fact]
+        public void ShouldApproveSalePaymentForSaleWaitingPayment()
+        {
+            var mockSaleRepository = new Mock<ISaleRepository>();
+            var mockSellerRepository = new Mock<ISellerRepository>();
+
+            Sale sale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
+            mockSaleRepository.Setup(s => s.GetSaleById(1)).Returns(sale);
+
+            var saleService = new SaleService(mockSaleRepository.Object, mockSellerRepository.Object);
+
+            Assert.Equal(EnumStatusSale.Waiting_payment, sale.Status);  
+            
+            saleService.ApproveSalePayment(1);          
+
+            Assert.Equal(EnumStatusSale.Payment_accepted, sale.Status);  
+        }  
+
+        [Theory]
+        [InlineData(EnumStatusSale.Canceled)]
+        [InlineData(EnumStatusSale.Delivered)]
+        [InlineData(EnumStatusSale.Payment_accepted)]
+        [InlineData(EnumStatusSale.Sent_to_carrier)]
+        public void ShouldThrowSaleServiceExceptionWhenApproveSalePaymentForSaleNotWaitingPayment(EnumStatusSale status)
+        {
+            var mockSaleRepository = new Mock<ISaleRepository>();
+            var mockSellerRepository = new Mock<ISellerRepository>();
+
+            Sale sale = SaleFactory.CreateValidSale(status);
+            mockSaleRepository.Setup(s => s.GetSaleById(1)).Returns(sale);
+           
+            var saleService = new SaleService(mockSaleRepository.Object, mockSellerRepository.Object);
+
+            Assert.Throws<SaleServiceException>(() => saleService.ApproveSalePayment(1));
+        }  
 
     }
 }
