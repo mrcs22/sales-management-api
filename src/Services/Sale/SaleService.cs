@@ -38,7 +38,11 @@ namespace tech_test_payment_api.Services
 
         public void CreateSale(Sale sale)
         {
-            throw new NotImplementedException();
+            sale.Date = DateTime.Now;
+            sale.OrderIdentifier = Guid.NewGuid().ToString();
+            sale.Status = EnumStatusSale.Waiting_payment;
+            
+            _saleRepository.CreateSale(sale);
         }
 
         public void FinishSaleDelivery(int id)
