@@ -12,6 +12,14 @@ namespace tech_test_payment_api.Services
         {
             _saleRepository = saleRepository;
         }
+        public void CreateSale(Sale sale)
+        {
+            sale.Date = DateTime.Now;
+            sale.OrderIdentifier = Guid.NewGuid().ToString();
+            sale.Status = EnumStatusSale.Waiting_payment;
+            
+            _saleRepository.CreateSale(sale);
+        }
         public void ApproveSalePayment(int id)
         {
             var sale = _saleRepository.GetSaleById(id);
@@ -36,18 +44,16 @@ namespace tech_test_payment_api.Services
             _saleRepository.UpdateSale(sale);
         }
 
-        public void CreateSale(Sale sale)
-        {
-            sale.Date = DateTime.Now;
-            sale.OrderIdentifier = Guid.NewGuid().ToString();
-            sale.Status = EnumStatusSale.Waiting_payment;
-            
-            _saleRepository.CreateSale(sale);
-        }
-
         public void FinishSaleDelivery(int id)
         {
-            throw new NotImplementedException();
+            var sale = _saleRepository.GetSaleById(id);
+
+            if(sale.Status != EnumStatusSale.Sent_to_carrier)
+                throw new SaleServiceException($"Sale of id {id} was not sent to carrier");
+            
+            sale.Status = EnumStatusSale.Delivered;
+
+            _saleRepository.UpdateSale(sale);
         }
 
         public Sale GetSaleById(int id)
