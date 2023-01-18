@@ -1,5 +1,6 @@
 using tech_test_payment_api.Models;
 using tech_test_payment_api.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace tech_test_payment_api.Repositories
 {
@@ -20,7 +21,11 @@ namespace tech_test_payment_api.Repositories
 
         public Sale GetSaleById(int id)
         {
-            var sale = _context.Sales.Find(id);
+            var sale = _context.Sales
+                .Include(s => s.Seller)
+                .Include(s => s.Products)
+                .FirstOrDefault(s => s.Id == id);
+            
             return sale;
         }
 
