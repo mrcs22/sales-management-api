@@ -65,7 +65,14 @@ namespace tech_test_payment_api.Services
 
         public void SendSaleToCarrier(int id)
         {
-            throw new NotImplementedException();
+            var sale = _saleRepository.GetSaleById(id);
+
+            if(sale.Status != EnumStatusSale.Payment_accepted)
+                throw new SaleServiceException($"Sale of id {id} is not with payment accepted");
+            
+            sale.Status = EnumStatusSale.Sent_to_carrier;
+
+            _saleRepository.UpdateSale(sale);
         }
     }
 }
