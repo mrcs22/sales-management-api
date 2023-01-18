@@ -26,7 +26,14 @@ namespace tech_test_payment_api.Services
 
         public void CancelSale(int id)
         {
-            throw new NotImplementedException();
+            var sale = _saleRepository.GetSaleById(id);
+
+            bool isSaleWaitingForPaymentOrPaid = (sale.Status == EnumStatusSale.Waiting_payment || sale.Status == EnumStatusSale.Payment_accepted);
+            if(!isSaleWaitingForPaymentOrPaid)
+                throw new SaleServiceException($"Only sales with status {EnumStatusSale.Waiting_payment} or {EnumStatusSale.Payment_accepted} are cancellable");
+            
+            sale.Status = EnumStatusSale.Canceled;
+            _saleRepository.UpdateSale(sale);
         }
 
         public void CreateSale(Sale sale)
