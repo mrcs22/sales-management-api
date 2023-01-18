@@ -11,9 +11,9 @@ namespace tech_test_payment_api.Repositories
         {
             _context = context;
         }
-        public Seller GetSellerByCpf(string cpf)
+        public Seller GetSellerByCpfOrEmail(string cpf, string email)
         {
-            var seller = _context.Sellers.FirstOrDefault(s => s.Cpf == cpf);
+            var seller = _context.Sellers.FirstOrDefault(s => s.Cpf == cpf || s.Email == email);
 
             return seller;
         }

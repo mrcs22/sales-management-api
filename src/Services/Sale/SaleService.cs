@@ -7,10 +7,13 @@ namespace tech_test_payment_api.Services
     public class SaleService : ISaleService
     {
         private readonly ISaleRepository _saleRepository;
+        private readonly ISellerRepository _sellerRepository;
+        
 
-        public SaleService(ISaleRepository saleRepository)
+        public SaleService(ISaleRepository saleRepository, ISellerRepository sellerRepository)
         {
             _saleRepository = saleRepository;
+            _sellerRepository = sellerRepository;
         }
         public void CreateSale(Sale sale)
         {
@@ -21,6 +24,10 @@ namespace tech_test_payment_api.Services
             sale.Status = EnumStatusSale.Waiting_payment;
 
             sale.Products.ForEach(p => p.CreatedAt = timestamp);
+
+            var seller = _sellerRepository.GetSellerByCpfOrEmail(sale.Seller.Cpf, sale.Seller.Email);
+            if(seller != null)
+                sale.Seller = seller;
             
             _saleRepository.CreateSale(sale);
         }
