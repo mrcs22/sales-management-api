@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using tech_test_payment_api.Services;
+using tech_test_payment_api.Models;
 
 namespace tech_test_payment_api.Controllers
 {
@@ -14,5 +15,13 @@ namespace tech_test_payment_api.Controllers
             _saleService = saleService;
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetSaleById(int id){
+           var sale = _saleService.GetSaleById(id);
+
+           return Ok(sale);
+        }
+       
     }
 }
