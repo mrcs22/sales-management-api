@@ -5,6 +5,9 @@ namespace tech_test_payment_api.Models
     public class Seller
     {
         public int Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
         
         [Required]
         [StringLength(11)]
