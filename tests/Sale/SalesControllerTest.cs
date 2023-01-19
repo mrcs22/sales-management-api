@@ -61,5 +61,20 @@ namespace tests
             
             Assert.Equal(expectedSale, result.Value);
         }
+
+        [Fact]
+        public void ShouldReturnOkStatusWhenApprovePaymentForSaleWaitingPayment()
+        {
+            var saleController = new SalesController(_mockSaleService.Object);
+
+            var sale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
+            var result = saleController.ApproveSalePayment(sale.Id) as OkResult;
+
+            Assert.NotNull(result);
+
+            int OkStatusCode = 200;
+            Assert.Equal(OkStatusCode, result.StatusCode);
+        }
+
     }
 }
