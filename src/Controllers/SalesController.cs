@@ -8,10 +8,12 @@ using tech_test_payment_api.Models;
     public class SalesController : ControllerBase
     {
         private readonly ISaleService _saleService;
+        private readonly ISellerService _sellerService;
 
-        public SalesController(ISaleService saleService)
+        public SalesController(ISaleService saleService, ISellerService sellerService)
         {
             _saleService = saleService;
+            _sellerService = sellerService;
         }
 
         [HttpGet]
@@ -28,6 +30,10 @@ using tech_test_payment_api.Models;
         [HttpPost]
         [Route("")]
         public IActionResult CreateSale(Sale sale){
+            bool isSellerValid = _sellerService.ValidateSeller(sale.Seller);
+            if(!isSellerValid)
+                return Unauthorized("Email e/ou Cpf já pertencem a um usuário. Preencha todos os dados do usuário corretamente para registrar a venda.");
+
             _saleService.CreateSale(sale);
 
             return CreatedAtAction(nameof(GetSaleById), new {id = sale.Id}, sale);
