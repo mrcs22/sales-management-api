@@ -46,20 +46,35 @@ namespace tests
         [Fact]
         public void ShouldReturnSaleWithCreatedStatusWhenCreatingSale()
         {
-            var expectedSale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
-            expectedSale.Seller.PhoneNumber="55";
-            _mockSaleService.Setup(s => s.GetSaleById(expectedSale.Id)).Returns(expectedSale);
+            var sale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
+            var seller = sale.Seller;
+            var firstSaleProduct = sale.Products[0];
+
+            var validSaleBody = new Sale {
+                Seller = new Seller {
+                        Name = seller.Name,
+                        Cpf= seller.Cpf,
+                        Email= seller.Email,
+                        PhoneNumber= seller.PhoneNumber
+                    },                     
+                Products = new List<Product> {
+                    new Product {      
+                        Name = firstSaleProduct.Name,
+                        Amount = firstSaleProduct.Amount      
+                    }
+                }
+            };
 
             var saleController = new SalesController(_mockSaleService.Object);
 
-            var result = saleController.CreateSale(expectedSale) as CreatedAtActionResult;
+            var result = saleController.CreateSale(validSaleBody) as CreatedAtActionResult;
             
             Assert.NotNull(result);
             
             int createdStatusCode = 201;
             Assert.Equal(createdStatusCode, result.StatusCode);
             
-            Assert.Equal(expectedSale, result.Value);
+            Assert.Equal(validSaleBody, result.Value);
         }
 
         [Fact]
