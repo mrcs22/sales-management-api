@@ -23,7 +23,8 @@ namespace tests.Factories
                      new Product { Id = 1,
                         Name="Product test",
                         Amount= 42,
-                        CreatedAt= timestamp
+                        CreatedAt= timestamp,
+                        Price=73
                         }
                     }               
             };

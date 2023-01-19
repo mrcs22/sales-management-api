@@ -60,7 +60,8 @@ namespace tests
                 Products = new List<Product> {
                     new Product {      
                         Name = firstSaleProduct.Name,
-                        Amount = firstSaleProduct.Amount      
+                        Amount = firstSaleProduct.Amount,
+                        Price = firstSaleProduct.Price    
                     }
                 }
             };
