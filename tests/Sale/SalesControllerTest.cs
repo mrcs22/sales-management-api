@@ -92,5 +92,18 @@ namespace tests
             Assert.Equal(OkStatusCode, result.StatusCode);
         }        
 
+        [Fact]
+        public void ShouldReturnOkStatusWhenSendSaleToCarrierForAPaidSale()
+        {
+            var saleController = new SalesController(_mockSaleService.Object);
+
+            var sale = SaleFactory.CreateValidSale(EnumStatusSale.Payment_accepted);
+            var result = saleController.SendSaleToCarrier(sale.Id) as OkResult;
+
+            Assert.NotNull(result);
+
+            int OkStatusCode = 200;
+            Assert.Equal(OkStatusCode, result.StatusCode);
+        }
     }
 }
