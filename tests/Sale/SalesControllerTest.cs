@@ -76,5 +76,21 @@ namespace tests
             Assert.Equal(OkStatusCode, result.StatusCode);
         }
 
+        [Theory]
+        [InlineData(EnumStatusSale.Waiting_payment)]
+        [InlineData(EnumStatusSale.Payment_accepted)]
+        public void ShouldReturnOkStatusWhenCancelSaleForACancellableSale(EnumStatusSale status)
+        {
+            var saleController = new SalesController(_mockSaleService.Object);
+
+            var sale = SaleFactory.CreateValidSale(status);
+            var result = saleController.CancelSale(sale.Id) as OkResult;
+
+            Assert.NotNull(result);
+
+            int OkStatusCode = 200;
+            Assert.Equal(OkStatusCode, result.StatusCode);
+        }        
+
     }
 }
