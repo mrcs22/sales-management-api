@@ -42,5 +42,24 @@ namespace tests
             int notFoundStatusCode = 404;
             Assert.Equal(notFoundStatusCode, result.StatusCode);
         }
+
+        [Fact]
+        public void ShouldReturnSaleWithCreatedStatusWhenCreatingSale()
+        {
+            var expectedSale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
+            expectedSale.Seller.PhoneNumber="55";
+            _mockSaleService.Setup(s => s.GetSaleById(expectedSale.Id)).Returns(expectedSale);
+
+            var saleController = new SalesController(_mockSaleService.Object);
+
+            var result = saleController.CreateSale(expectedSale) as CreatedAtActionResult;
+            
+            Assert.NotNull(result);
+            
+            int createdStatusCode = 201;
+            Assert.Equal(createdStatusCode, result.StatusCode);
+            
+            Assert.Equal(expectedSale, result.Value);
+        }
     }
 }
