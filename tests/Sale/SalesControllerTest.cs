@@ -10,9 +10,12 @@ namespace tests
     public class SalesControllerTest
     {
         private readonly Mock<ISaleService> _mockSaleService;
+        private readonly Mock<ISellerService> _mockSellerService;
         public SalesControllerTest()
         {
             _mockSaleService = new Mock<ISaleService>();
+            
+            _mockSellerService = new Mock<ISellerService>();
         }
 
         [Fact]
@@ -21,7 +24,7 @@ namespace tests
             var expectedSale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
             _mockSaleService.Setup(s => s.GetSaleById(expectedSale.Id)).Returns(expectedSale);
 
-            var saleController = new SalesController(_mockSaleService.Object);
+            var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var result = saleController.GetSaleById(expectedSale.Id) as OkObjectResult;
 
@@ -32,7 +35,7 @@ namespace tests
         [Fact]
         public void ShouldReturnNotFoundStatusWhenGetSaleByIdWithInvalidId()
         {
-            var saleController = new SalesController(_mockSaleService.Object);
+            var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             int invalidSaleId = 0;
             var result = saleController.GetSaleById(invalidSaleId) as NotFoundResult;
@@ -65,8 +68,9 @@ namespace tests
                     }
                 }
             };
-
-            var saleController = new SalesController(_mockSaleService.Object);
+            
+            _mockSellerService.Setup(s => s.ValidateSeller(validSaleBody.Seller)).Returns(true);
+            var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var result = saleController.CreateSale(validSaleBody) as CreatedAtActionResult;
             
@@ -81,7 +85,7 @@ namespace tests
         [Fact]
         public void ShouldReturnOkStatusWhenApprovePaymentForSaleWaitingPayment()
         {
-            var saleController = new SalesController(_mockSaleService.Object);
+            var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var sale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
             var result = saleController.ApproveSalePayment(sale.Id) as OkResult;
@@ -97,7 +101,7 @@ namespace tests
         [InlineData(EnumStatusSale.Payment_accepted)]
         public void ShouldReturnOkStatusWhenCancelSaleForACancellableSale(EnumStatusSale status)
         {
-            var saleController = new SalesController(_mockSaleService.Object);
+            var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var sale = SaleFactory.CreateValidSale(status);
             var result = saleController.CancelSale(sale.Id) as OkResult;
@@ -111,7 +115,7 @@ namespace tests
         [Fact]
         public void ShouldReturnOkStatusWhenSendSaleToCarrierForAPaidSale()
         {
-            var saleController = new SalesController(_mockSaleService.Object);
+            var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var sale = SaleFactory.CreateValidSale(EnumStatusSale.Payment_accepted);
             var result = saleController.SendSaleToCarrier(sale.Id) as OkResult;
@@ -125,7 +129,7 @@ namespace tests
         [Fact]
         public void ShouldReturnOkStatusWhenFinishSaleDeliveryForASentSale()
         {
-            var saleController = new SalesController(_mockSaleService.Object);
+            var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var sale = SaleFactory.CreateValidSale(EnumStatusSale.Sent_to_carrier);
             var result = saleController.FinishSaleDelivery(sale.Id) as OkResult;
