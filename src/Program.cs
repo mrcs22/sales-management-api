@@ -18,6 +18,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddTransient<ISaleRepository, SaleRepository>();
 builder.Services.AddTransient<ISaleService, SaleService>();
 builder.Services.AddTransient<ISellerRepository, SellerRepository>();
+builder.Services.AddTransient<ISellerService, SellerService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
