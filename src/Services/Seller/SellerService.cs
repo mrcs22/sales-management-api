@@ -13,18 +13,23 @@ namespace tech_test_payment_api.Services
         }
         public bool ValidateSeller(Seller seller)
         {
-            var sellerPropertiesToValidate = new List<string>{ "Name", "Cpf", "Email", "PhoneNumber"};
-            bool isSellerValid = true;
-            
-            var sellerFound = _sellerRepository.GetSellerByCpfOrEmail(seller.Cpf, seller.Email);
-            sellerPropertiesToValidate.ForEach(prop => {
-                bool isPropValid = seller.GetType().GetProperty(prop) == sellerFound.GetType().GetProperty(prop);
-                
-                if(!isPropValid)
-                    isSellerValid = false;
-            });
+            Seller sellerFound = _sellerRepository.GetSellerByCpfOrEmail(seller.Cpf, seller.Email);
+            if(sellerFound == null)
+                return true;
 
-            return isSellerValid;
-        }
+            if(seller.Name != sellerFound.Name)
+                return false;
+
+            if(seller.Cpf != sellerFound.Cpf)
+                return false;
+            
+            if(seller.Email != sellerFound.Email)
+                return false;
+            
+            if(seller.PhoneNumber != sellerFound.PhoneNumber)
+                return false;
+          
+            return true;
+        }  
     }
 }
