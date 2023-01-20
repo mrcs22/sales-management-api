@@ -11,7 +11,7 @@ namespace tech_test_payment_api.Models
         public int Amount { get; set; }
         [Required]
         [Range(1, int.MaxValue)]
-        public int Price { get; set; }
+        public decimal Price { get; set; }
         public DateTime CreatedAt {get; set;}
     }
 }
