@@ -7,6 +7,7 @@ namespace tests.Factories
         public static Sale CreateValidSale(EnumStatusSale status){
             DateTime timestamp = DateTime.Now;
             Seller seller = SellerFactory.CreateValidSeller();
+            Product product = ProductFactory.CreateValidProduct();
 
             Sale sale = new Sale {
                 Id = 1,
@@ -14,17 +15,34 @@ namespace tests.Factories
                 Date = timestamp,
                 Seller = seller,
                 Status = status,
-                Products= new List<Product>{
-                     new Product { Id = 1,
-                        Name="Product test",
-                        Amount= 42,
-                        CreatedAt= timestamp,
-                        Price=73
-                        }
-                    }               
+                Products= new List<Product>{product}               
             };
 
             return sale;
+        }
+
+        public static Sale CreateValidSaleBody(){
+            Seller seller = SellerFactory.CreateValidSeller();
+            Product product = ProductFactory.CreateValidProduct();
+
+            Sale validSaleBody = new Sale {
+                Seller = new Seller {
+                        Name = seller.Name,
+                        Cpf= seller.Cpf,
+                        Email= seller.Email,
+                        PhoneNumber= seller.PhoneNumber
+                    },                     
+                Products = new List<Product> {
+                    new Product {      
+                        Name = product.Name,
+                        Amount = product.Amount,
+                        Price = product.Price    
+                    }
+                }
+            };
+
+            return validSaleBody;
+          
         }
     }
 }

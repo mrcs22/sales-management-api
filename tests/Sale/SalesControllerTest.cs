@@ -49,25 +49,7 @@ namespace tests
         [Fact]
         public void ShouldReturnSaleWithCreatedStatusWhenCreatingSale()
         {
-            var sale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
-            var seller = sale.Seller;
-            var firstSaleProduct = sale.Products[0];
-
-            var validSaleBody = new Sale {
-                Seller = new Seller {
-                        Name = seller.Name,
-                        Cpf= seller.Cpf,
-                        Email= seller.Email,
-                        PhoneNumber= seller.PhoneNumber
-                    },                     
-                Products = new List<Product> {
-                    new Product {      
-                        Name = firstSaleProduct.Name,
-                        Amount = firstSaleProduct.Amount,
-                        Price = firstSaleProduct.Price    
-                    }
-                }
-            };
+            var validSaleBody = SaleFactory.CreateValidSaleBody();
             
             _mockSellerService.Setup(s => s.ValidateSeller(validSaleBody.Seller)).Returns(true);
             var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
@@ -80,6 +62,22 @@ namespace tests
             Assert.Equal(createdStatusCode, result.StatusCode);
             
             Assert.Equal(validSaleBody, result.Value);
+        }
+
+        [Fact]
+        public void ShouldReturnUnauthorizedStatusWhenCreatingSaleWhitWrongSellerInfo()
+        {
+            var validSaleBody = SaleFactory.CreateValidSaleBody();
+            
+            _mockSellerService.Setup(s => s.ValidateSeller(validSaleBody.Seller)).Returns(false);
+            var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
+
+            var result = saleController.CreateSale(validSaleBody) as UnauthorizedObjectResult;
+            
+            Assert.NotNull(result);
+            
+            int unauthorizedStatusCode = 401;
+            Assert.Equal(unauthorizedStatusCode, result.StatusCode);
         }
 
         [Fact]
