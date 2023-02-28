@@ -17,9 +17,9 @@ using tech_test_payment_api.Models;
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public IActionResult GetSaleById(int id){
-           var sale = _saleService.GetSaleById(id);
+        [Route("{identifier}")]
+        public IActionResult GetSaleByIdentifier(string identifier){
+           var sale = _saleService.GetSaleByIdentifier(identifier);
 
            if(sale == null)
             return NotFound();
@@ -36,38 +36,38 @@ using tech_test_payment_api.Models;
 
             _saleService.CreateSale(sale);
 
-            return CreatedAtAction(nameof(GetSaleById), new {id = sale.Id}, sale);
+            return CreatedAtAction(nameof(GetSaleByIdentifier), new {identifier = sale.OrderIdentifier}, sale);
         }
 
         [HttpPost]
-        [Route("{id}/approve-payment")]
-        public IActionResult ApproveSalePayment(int id){
-            _saleService.ApproveSalePayment(id);
+        [Route("{identifier}/approve-payment")]
+        public IActionResult ApproveSalePayment(string identifier){
+            _saleService.ApproveSalePayment(identifier);
 
             return Ok();
         }
 
         [HttpPost]
-        [Route("{id}/cancel")]
-        public IActionResult CancelSale(int id){
-            _saleService.CancelSale(id);
+        [Route("{identifier}/cancel")]
+        public IActionResult CancelSale(string identifier){
+            _saleService.CancelSale(identifier);
 
             return Ok();           
         }
 
         [HttpPost]
-        [Route("{id}/mark-as-sent")]
-        public IActionResult SendSaleToCarrier(int id){
-            _saleService.SendSaleToCarrier(id);
+        [Route("{identifier}/mark-as-sent")]
+        public IActionResult SendSaleToCarrier(string identifier){
+            _saleService.SendSaleToCarrier(identifier);
 
             return Ok();
            
         }        
 
         [HttpPost]
-        [Route("{id}/mark-as-delivered")]
-        public IActionResult FinishSaleDelivery(int id){
-            _saleService.FinishSaleDelivery(id);
+        [Route("{identifier}/mark-as-delivered")]
+        public IActionResult FinishSaleDelivery(string identifier){
+            _saleService.FinishSaleDelivery(identifier);
 
             return Ok();
         }  

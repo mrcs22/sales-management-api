@@ -19,12 +19,12 @@ namespace tech_test_payment_api.Repositories
             _context.SaveChanges();
         }
 
-        public Sale GetSaleById(int id)
+        public Sale GetSaleByIdentifier(string identifier)
         {
             var sale = _context.Sales
                 .Include(s => s.Seller)
                 .Include(s => s.Products)
-                .FirstOrDefault(s => s.Id == id);
+                .FirstOrDefault(s => s.OrderIdentifier == identifier);
             
             return sale;
         }

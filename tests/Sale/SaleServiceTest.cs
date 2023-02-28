@@ -21,11 +21,11 @@ namespace tests
         public void ShouldReturnASaleWhenGetSaleByIdWithValidId()
         {
             Sale expectedSale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
-            _mockSaleRepository.Setup(s => s.GetSaleById(expectedSale.Id)).Returns(expectedSale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(expectedSale.OrderIdentifier)).Returns(expectedSale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
-            Sale sale = saleService.GetSaleById(expectedSale.Id);
+            Sale sale = saleService.GetSaleByIdentifier(expectedSale.OrderIdentifier);
 
             Assert.Equal(expectedSale, sale);
         }
@@ -35,8 +35,8 @@ namespace tests
         {
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
-            int invalidSaleId = 0;
-            Sale sale = saleService.GetSaleById(invalidSaleId);
+            string invalidSaleIdentifier = "JustAText";
+            Sale sale = saleService.GetSaleByIdentifier(invalidSaleIdentifier);
 
             Assert.Equal(null, sale);
         }
@@ -78,13 +78,13 @@ namespace tests
         public void ShouldApproveSalePaymentForSaleWaitingPayment()
         {
             Sale sale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
-            _mockSaleRepository.Setup(s => s.GetSaleById(sale.Id)).Returns(sale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(sale.OrderIdentifier)).Returns(sale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
             Assert.Equal(EnumStatusSale.Waiting_payment, sale.Status);
 
-            saleService.ApproveSalePayment(sale.Id);
+            saleService.ApproveSalePayment(sale.OrderIdentifier);
 
             Assert.Equal(EnumStatusSale.Payment_accepted, sale.Status);
         }
@@ -97,11 +97,11 @@ namespace tests
         public void ShouldThrowSaleServiceExceptionWhenApproveSalePaymentForSaleNotWaitingPayment(EnumStatusSale status)
         {
             Sale sale = SaleFactory.CreateValidSale(status);
-            _mockSaleRepository.Setup(s => s.GetSaleById(sale.Id)).Returns(sale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(sale.OrderIdentifier)).Returns(sale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
-            Assert.Throws<SaleServiceException>(() => saleService.ApproveSalePayment(sale.Id));
+            Assert.Throws<SaleServiceException>(() => saleService.ApproveSalePayment(sale.OrderIdentifier));
         }
 
         [Theory]
@@ -110,13 +110,13 @@ namespace tests
         public void ShouldCancelSaleIfItIsWaitingPaymentOrPaid(EnumStatusSale status)
         {
             Sale sale = SaleFactory.CreateValidSale(status);
-            _mockSaleRepository.Setup(s => s.GetSaleById(sale.Id)).Returns(sale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(sale.OrderIdentifier)).Returns(sale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
             Assert.NotEqual(EnumStatusSale.Canceled, sale.Status);
 
-            saleService.CancelSale(sale.Id);
+            saleService.CancelSale(sale.OrderIdentifier);
 
             Assert.Equal(EnumStatusSale.Canceled, sale.Status);
         }
@@ -128,24 +128,24 @@ namespace tests
         public void ShouldThrowSaleServiceExceptionWhenCancelSaleIfItIsNotWaitingPaymentOrPaid(EnumStatusSale status)
         {
             Sale sale = SaleFactory.CreateValidSale(status);
-            _mockSaleRepository.Setup(s => s.GetSaleById(sale.Id)).Returns(sale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(sale.OrderIdentifier)).Returns(sale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
-            Assert.Throws<SaleServiceException>(() => saleService.CancelSale(sale.Id));
+            Assert.Throws<SaleServiceException>(() => saleService.CancelSale(sale.OrderIdentifier));
         }
 
         [Fact]
         public void ShouldFinishSaleDeliveryIfItWasSentToCarrier()
         {
             Sale sale = SaleFactory.CreateValidSale(EnumStatusSale.Sent_to_carrier);
-            _mockSaleRepository.Setup(s => s.GetSaleById(sale.Id)).Returns(sale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(sale.OrderIdentifier)).Returns(sale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
             Assert.Equal(EnumStatusSale.Sent_to_carrier, sale.Status);
 
-            saleService.FinishSaleDelivery(sale.Id);
+            saleService.FinishSaleDelivery(sale.OrderIdentifier);
 
             Assert.Equal(EnumStatusSale.Delivered, sale.Status);
         }
@@ -159,24 +159,24 @@ namespace tests
         public void ShouldThrowSaleServiceExceptionWhenFinishSaleDeliveryIfItWasNotSentToCarrier(EnumStatusSale status)
         {
             Sale sale = SaleFactory.CreateValidSale(status);
-            _mockSaleRepository.Setup(s => s.GetSaleById(sale.Id)).Returns(sale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(sale.OrderIdentifier)).Returns(sale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
-            Assert.Throws<SaleServiceException>(() => saleService.FinishSaleDelivery(sale.Id));
+            Assert.Throws<SaleServiceException>(() => saleService.FinishSaleDelivery(sale.OrderIdentifier));
         }
 
         [Fact]
         public void ShouldSendSaleToCarrierIfItIsPaid()
         {
             Sale sale = SaleFactory.CreateValidSale(EnumStatusSale.Payment_accepted);
-            _mockSaleRepository.Setup(s => s.GetSaleById(sale.Id)).Returns(sale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(sale.OrderIdentifier)).Returns(sale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
             Assert.Equal(EnumStatusSale.Payment_accepted, sale.Status);
 
-            saleService.SendSaleToCarrier(sale.Id);
+            saleService.SendSaleToCarrier(sale.OrderIdentifier);
 
             Assert.Equal(EnumStatusSale.Sent_to_carrier, sale.Status);
         }
@@ -189,11 +189,11 @@ namespace tests
         public void ShouldThrowSaleServiceExceptionWhenSendSaleToCarrierIfItIsNotPaid(EnumStatusSale status)
         {
             Sale sale = SaleFactory.CreateValidSale(status);
-            _mockSaleRepository.Setup(s => s.GetSaleById(sale.Id)).Returns(sale);
+            _mockSaleRepository.Setup(s => s.GetSaleByIdentifier(sale.OrderIdentifier)).Returns(sale);
 
             var saleService = new SaleService(_mockSaleRepository.Object, _mockSellerRepository.Object);
 
-            Assert.Throws<SaleServiceException>(() => saleService.SendSaleToCarrier(sale.Id));
+            Assert.Throws<SaleServiceException>(() => saleService.SendSaleToCarrier(sale.OrderIdentifier));
         }
     }
 }

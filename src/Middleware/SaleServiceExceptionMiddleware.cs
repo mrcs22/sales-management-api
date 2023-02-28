@@ -24,9 +24,14 @@ namespace tech_test_payment_api.Middleware
             response.ContentType = "application/json";
 
             context.Response.StatusCode = 400;
+
+            if(ex.GetType() == typeof(SaleNotFoundException))
+                context.Response.StatusCode = 404;
+            
             var json = JsonSerializer.Serialize(new { message = ex?.Message });
             await context.Response.WriteAsync(json);
         }
+        
     }
 }
 }

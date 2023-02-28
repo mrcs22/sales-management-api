@@ -19,26 +19,26 @@ namespace tests
         }
 
         [Fact]
-        public void ShouldReturnSaleWithOkStatusWhenGetSaleByIdWithValidId()
+        public void ShouldReturnSaleWithOkStatusWhenGetSaleByIdWithValidIdentifier()
         {
             var expectedSale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
-            _mockSaleService.Setup(s => s.GetSaleById(expectedSale.Id)).Returns(expectedSale);
+            _mockSaleService.Setup(s => s.GetSaleByIdentifier(expectedSale.OrderIdentifier)).Returns(expectedSale);
 
             var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
-            var result = saleController.GetSaleById(expectedSale.Id) as OkObjectResult;
+            var result = saleController.GetSaleByIdentifier(expectedSale.OrderIdentifier) as OkObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(expectedSale, result.Value);
         }
 
         [Fact]
-        public void ShouldReturnNotFoundStatusWhenGetSaleByIdWithInvalidId()
+        public void ShouldReturnNotFoundStatusWhenGetSaleByIdWithInvalidIdentifier()
         {
             var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
-            int invalidSaleId = 0;
-            var result = saleController.GetSaleById(invalidSaleId) as NotFoundResult;
+            string invalidSaleIdentifier = "JustAText";
+            var result = saleController.GetSaleByIdentifier(invalidSaleIdentifier) as NotFoundResult;
 
             Assert.NotNull(result);
 
@@ -65,7 +65,7 @@ namespace tests
         }
 
         [Fact]
-        public void ShouldReturnUnauthorizedStatusWhenCreatingSaleWhitWrongSellerInfo()
+        public void ShouldReturnUnauthorizedStatusWhenCreatingSaleWithWrongSellerInfo()
         {
             var validSaleBody = SaleFactory.CreateValidSaleBody();
             
@@ -86,7 +86,7 @@ namespace tests
             var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var sale = SaleFactory.CreateValidSale(EnumStatusSale.Waiting_payment);
-            var result = saleController.ApproveSalePayment(sale.Id) as OkResult;
+            var result = saleController.ApproveSalePayment(sale.OrderIdentifier) as OkResult;
 
             Assert.NotNull(result);
 
@@ -102,7 +102,7 @@ namespace tests
             var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var sale = SaleFactory.CreateValidSale(status);
-            var result = saleController.CancelSale(sale.Id) as OkResult;
+            var result = saleController.CancelSale(sale.OrderIdentifier) as OkResult;
 
             Assert.NotNull(result);
 
@@ -116,7 +116,7 @@ namespace tests
             var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var sale = SaleFactory.CreateValidSale(EnumStatusSale.Payment_accepted);
-            var result = saleController.SendSaleToCarrier(sale.Id) as OkResult;
+            var result = saleController.SendSaleToCarrier(sale.OrderIdentifier) as OkResult;
 
             Assert.NotNull(result);
 
@@ -130,7 +130,7 @@ namespace tests
             var saleController = new SalesController(_mockSaleService.Object, _mockSellerService.Object);
 
             var sale = SaleFactory.CreateValidSale(EnumStatusSale.Sent_to_carrier);
-            var result = saleController.FinishSaleDelivery(sale.Id) as OkResult;
+            var result = saleController.FinishSaleDelivery(sale.OrderIdentifier) as OkResult;
 
             Assert.NotNull(result);
 
