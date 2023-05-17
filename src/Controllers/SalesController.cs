@@ -16,8 +16,7 @@ using tech_test_payment_api.Models;
             _sellerService = sellerService;
         }
 
-        [HttpGet]
-        [Route("{identifier}")]
+        [HttpGet("{identifier}")]
         public IActionResult GetSaleByIdentifier(string identifier){
            var sale = _saleService.GetSaleByIdentifier(identifier);
 
@@ -28,7 +27,6 @@ using tech_test_payment_api.Models;
         }
 
         [HttpPost]
-        [Route("")]
         public IActionResult CreateSale(Sale sale){
             bool isSellerValid = _sellerService.ValidateSeller(sale.Seller);
             if(!isSellerValid)
@@ -40,23 +38,21 @@ using tech_test_payment_api.Models;
         }
 
         [HttpPost]
-        [Route("{identifier}/approve-payment")]
+        [Route("{identifier}/approve")]
         public IActionResult ApproveSalePayment(string identifier){
             _saleService.ApproveSalePayment(identifier);
 
             return Ok();
         }
 
-        [HttpPost]
-        [Route("{identifier}/cancel")]
+        [HttpPost("{identifier}/cancel")]
         public IActionResult CancelSale(string identifier){
             _saleService.CancelSale(identifier);
 
             return Ok();           
         }
 
-        [HttpPost]
-        [Route("{identifier}/mark-as-sent")]
+        [HttpPost("{identifier}/send")]
         public IActionResult SendSaleToCarrier(string identifier){
             _saleService.SendSaleToCarrier(identifier);
 
@@ -64,8 +60,7 @@ using tech_test_payment_api.Models;
            
         }        
 
-        [HttpPost]
-        [Route("{identifier}/mark-as-delivered")]
+        [HttpPost("{identifier}/deliver")]
         public IActionResult FinishSaleDelivery(string identifier){
             _saleService.FinishSaleDelivery(identifier);
 
