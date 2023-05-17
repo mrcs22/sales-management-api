@@ -1,10 +1,7 @@
 version: '3'
 services:
   webapi:
-    build: .
-    ports:
-      - "5000:5000"
-      - "5001:5001"
+    build: ./api
     environment:
       - ASPNETCORE_HTTP_PORT=https://+:5001
       - ASPNETCORE_URLS=http://+:5000
@@ -12,12 +9,27 @@ services:
     depends_on:
       - db
     entrypoint: [ "/bin/sh" , "-c", "dotnet ef database update --project /source/src/tech-test-payment-api.csproj && dotnet /app/tech-test-payment-api.dll"]
-    restart: always
+    restart: unless-stopped
     container_name: webapi
+
   db:
     container_name: tech_test_payment_api_db
     image: mcr.microsoft.com/mssql/server:2019-CU8-ubuntu-16.04
+    restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=SenhaSuperSegura@123
+    volumes:
+      - db_data:/var/opt/mssql/data
+
+  nginx:
+    container_name: nginx_container
+    build: ./nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    depends_on:
+      - webapi
   
+volumes:
+  db_data:
